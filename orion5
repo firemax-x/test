@@ -341,27 +341,27 @@ local BlacklistedKeys = {Enum.KeyCode.Unknown,Enum.KeyCode.W,Enum.KeyCode.A,Enum
 local freeMouse = Create("TextButton", {Name = "FMouse", Size = UDim2.new(), BackgroundTransparency = 1, Text = "", Position = UDim2.new(), Modal = true, Parent = Orion, Visible = false})
 local mouselock = false
 
+local zoomMinimoLiberado = 0.5
+local zoomMaximoLiberado = 0.55
+local zoomNormal = 0.5
+
 local function UnlockMouse(Value)
     if Value then
         mouselock = true
-
-        task.spawn(function() 
-            while mouselock do
-                UserInputService.MouseIconEnabled = Value
-                freeMouse.Visible = Value
-                task.wait()
-            end
-
-            UserInputService.MouseIconEnabled = false
-            freeMouse.Visible = false
-        end)
+        UserInputService.MouseIconEnabled = false
+        UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+        LocalPlayer.CameraMaxZoomDistance = zoomNormal
+        LocalPlayer.CameraMinZoomDistance = zoomNormal
+        LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
     else
         mouselock = false
-        UserInputService.MouseIconEnabled = false
-        freeMouse.Visible = false
+        UserInputService.MouseIconEnabled = true
+        UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+        LocalPlayer.CameraMaxZoomDistance = zoomMaximoLiberado
+        LocalPlayer.CameraMinZoomDistance = zoomMinimoLiberado
+        LocalPlayer.CameraMode = Enum.CameraMode.Classic
     end
 end
-
 
 local function CheckKey(Table, Key)
 	for _, v in next, Table do
@@ -757,13 +757,6 @@ function OrionLib:MakeWindow(WindowConfig)
 		Size = UDim2.new(0, 615, 0, 344),
 		ClipsDescendants = true
 	}), {
-		--SetProps(MakeElement("Image", "rbxassetid://3523728077"), {
-		--	AnchorPoint = Vector2.new(0.5, 0.5),
-		--	Position = UDim2.new(0.5, 0, 0.5, 0),
-		--	Size = UDim2.new(1, 80, 1, 320),
-		--	ImageColor3 = Color3.fromRGB(33, 33, 33),
-		--	ImageTransparency = 0.7
-		--}),
 		SetChildren(SetProps(MakeElement("TFrame"), {
 			Size = UDim2.new(1, 0, 0, 50),
 			Name = "TopBar"
@@ -804,7 +797,7 @@ function OrionLib:MakeWindow(WindowConfig)
 	
 	local function updateColor()
 		while true do
-			task.wait(0.2)
+			task.wait()
 			ResizeHandle.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Main
 		end
 	end
@@ -829,7 +822,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			local newWidth = MainWindow.Size.X.Offset + delta.X
 			local newHeight = MainWindow.Size.Y.Offset + delta.Y
 	
-			if newWidth >= 350 and newHeight >= 200 then
+			if newWidth >= 415 and newHeight >= 307 then
 				task.spawn(function()
 					MainWindow.Size = UDim2.new(0, newWidth, 0, newHeight)
 				end)
@@ -878,8 +871,8 @@ function OrionLib:MakeWindow(WindowConfig)
 		end
 	end
 	
-	zoomMinimoLiberado = 10
-	zoomMaximoLiberado = 50
+	zoomMinimoLiberado = 0.5
+	zoomMaximoLiberado = 0.55
 	zoomNormal = 0.5
 	
 	function toggleMouseLock(isMinimized)
@@ -901,10 +894,9 @@ function OrionLib:MakeWindow(WindowConfig)
 	AddConnection(CloseBtn.MouseButton1Up, function()
 		MainWindow.Visible = false
 		UIHidden = true
-		toggleMouseLock(true)
 	
 		if WindowConfig.FreeMouse then
-			toggleMouseLock(true)
+			UnlockMouse(true)
 		end
 	
 		OrionLib:MakeNotification({
@@ -940,7 +932,6 @@ function OrionLib:MakeWindow(WindowConfig)
 			if Input.KeyCode == Enum.KeyCode[WindowConfig.KeyToOpenWindow] and UIHidden then
 				MainWindow.Visible = true
 				UIHidden = false
-				toggleMouseLock(false)
 				if WindowConfig.FreeMouse then
 					UnlockMouse(true)
 				end
@@ -949,7 +940,6 @@ function OrionLib:MakeWindow(WindowConfig)
 			elseif Input.KeyCode == Enum.KeyCode[WindowConfig.KeyToOpenWindow] and not UIHidden then
 				MainWindow.Visible = false
 				UIHidden = true
-				toggleMouseLock(true) 
 
 				if WindowConfig.FreeMouse then
 					UnlockMouse(false)
