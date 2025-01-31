@@ -341,7 +341,7 @@ local BlacklistedKeys = {Enum.KeyCode.Unknown,Enum.KeyCode.W,Enum.KeyCode.A,Enum
 local freeMouse = Create("TextButton", {Name = "FMouse", Size = UDim2.new(), BackgroundTransparency = 1, Text = "", Position = UDim2.new(), Modal = true, Parent = Orion, Visible = false})
 local mouselock = false
 
-local zoomMinimoLiberado = 0.5
+local zoomMinimoLiberado = 1
 local zoomMaximoLiberado = 2
 local zoomNormal = 0.5
 
