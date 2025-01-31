@@ -364,7 +364,7 @@ local function UnlockMouse(Value)
 end
 
 UserInputService.InputChanged:Connect(function(input)
-    if mouselock and input.UserInputType == Enum.UserInputType.MouseMovement then
+    if mouselock and input.UserInputType == Enum.MouseBehavior.LockCenter then
         if UserInputService.MouseBehavior ~= Enum.MouseBehavior.Default then
             UserInputService.MouseBehavior = Enum.MouseBehavior.Default
         end
