@@ -348,18 +348,18 @@ local zoomNormal = 0.5
 local function UnlockMouse(Value)
     if Value then
         mouselock = true
-        UserInputService.MouseIconEnabled = false
-        UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
-        LocalPlayer.CameraMaxZoomDistance = zoomNormal
-        LocalPlayer.CameraMinZoomDistance = zoomNormal
-        LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
-    else
-        mouselock = false
         UserInputService.MouseIconEnabled = true
         UserInputService.MouseBehavior = Enum.MouseBehavior.Default
         LocalPlayer.CameraMaxZoomDistance = zoomMaximoLiberado
         LocalPlayer.CameraMinZoomDistance = zoomMinimoLiberado
         LocalPlayer.CameraMode = Enum.CameraMode.Classic
+    else
+        mouselock = false
+		UserInputService.MouseIconEnabled = false
+		UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+		LocalPlayer.CameraMaxZoomDistance = zoomNormal
+		LocalPlayer.CameraMinZoomDistance = zoomNormal
+		LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
     end
 end
 
