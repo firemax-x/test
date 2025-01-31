@@ -791,6 +791,42 @@ function OrionLib:MakeWindow(WindowConfig)
 		WindowStuff
 	}), "Main")
 
+	local ResizeHandle = Instance.new("Frame")
+	ResizeHandle.Size = UDim2.new(0, 20, 0, 20)
+	ResizeHandle.Position = UDim2.new(1, -20, 1, -20)
+	ResizeHandle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+	ResizeHandle.BorderSizePixel = 0
+	ResizeHandle.Parent = MainWindow
+	ResizeHandle.Visible = false  
+	
+	local UIS = game:GetService("UserInputService")
+	local dragging = false
+	local lastMousePos
+	
+	ResizeHandle.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+			lastMousePos = input.Position
+		end
+	end)
+	
+	UIS.InputChanged:Connect(function(input)
+		if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+			local delta = input.Position - lastMousePos
+			lastMousePos = input.Position
+			
+			task.spawn(function() 
+				MainWindow.Size = UDim2.new(0, MainWindow.Size.X.Offset + delta.X, 0, MainWindow.Size.Y.Offset + delta.Y)
+			end)
+		end
+	end)
+	
+	UIS.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = false
+		end
+	end)
+	
 	if WindowConfig.ShowIcon then
 		WindowName.Position = UDim2.new(0, 50, 0, -24)
 		local WindowIcon = SetProps(MakeElement("Image", WindowConfig.Icon), {
