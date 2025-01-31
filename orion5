@@ -294,7 +294,7 @@ function OrionLib:SetTheme()
             Object[ReturnProperty(Object)] = self.Themes[self.SelectedTheme][Name]
         end    
     end
-	updateColor()  
+	ResizeHandle.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Main
 end
 
 local function PackColor(Color)
@@ -794,13 +794,9 @@ function OrionLib:MakeWindow(WindowConfig)
 	local UICorner = Instance.new("UICorner")
 	UICorner.CornerRadius = UDim.new(0.5, 0)
 	UICorner.Parent = ResizeHandle
-	
-	local function updateColor()
-		ResizeHandle.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Main
-	end
 
-	updateColor()
-	
+	ResizeHandle.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Main
+
 	local UIS = game:GetService("UserInputService")
 	local dragging = false
 	local lastMousePos
