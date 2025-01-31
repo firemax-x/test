@@ -341,8 +341,8 @@ local BlacklistedKeys = {Enum.KeyCode.Unknown,Enum.KeyCode.W,Enum.KeyCode.A,Enum
 local freeMouse = Create("TextButton", {Name = "FMouse", Size = UDim2.new(), BackgroundTransparency = 1, Text = "", Position = UDim2.new(), Modal = true, Parent = Orion, Visible = false})
 local mouselock = false
 
-local zoomMinimoLiberado = 1
-local zoomMaximoLiberado = 2
+local zoomMinimoLiberado = 10
+local zoomMaximoLiberado = 100
 local zoomNormal = 0.5
 
 local function UnlockMouse(Value)
@@ -795,12 +795,23 @@ function OrionLib:MakeWindow(WindowConfig)
 	UICorner.CornerRadius = UDim.new(0.5, 0)  
 	UICorner.Parent = ResizeHandle
 	
-	local function updateColor()
-		while true do
-			task.wait()
-			ResizeHandle.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Main
+	local function updateColor(newTheme)
+		local theme = OrionLib.Themes[newTheme]
+		if theme then
+			ResizeHandle.BackgroundColor3 = theme.Main
+		else
+			warn("Tema inválido: " .. tostring(newTheme))
 		end
 	end
+	
+	setmetatable(OrionLib, {
+		__newindex = function(t, key, value)
+			rawset(t, key, value)
+			if key == "SelectedTheme" then
+				updateColor(value)
+			end
+		end
+	})
 	
 	task.spawn(updateColor)
 	
