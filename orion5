@@ -288,7 +288,7 @@ local function AddThemeObject(Object, Type)
 	return Object
 end
 
-local ResizeHandle
+local ResizeHandle = Instance.new("Frame")
 
 function OrionLib:SetTheme()
     for Name, Type in pairs(self.ThemeObjects) do
@@ -783,7 +783,6 @@ function OrionLib:MakeWindow(WindowConfig)
 		WindowStuff
 	}), "Main")
 	
-	ResizeHandle = Instance.new("Frame")
 	ResizeHandle.Size = UDim2.new(0, 16, 0, 16)
 	ResizeHandle.Position = UDim2.new(1, -16, 1, -16)
 	ResizeHandle.BorderSizePixel = 0
