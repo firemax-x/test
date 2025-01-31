@@ -780,26 +780,34 @@ function OrionLib:MakeWindow(WindowConfig)
 		WindowStuff
 	}), "Main")
 
+	local mt = {
+		__newindex = function(t, k, v)
+			if k == "SelectedTheme" then
+				rawset(t, k, v)
+				ResizeHandle.BackgroundColor3 = OrionLib.Themes[v].Main
+			else
+				rawset(t, k, v)
+			end
+		end
+	}
+	
+	setmetatable(OrionLib, mt)
+	
 	local ResizeHandle = Instance.new("Frame")
 	ResizeHandle.Size = UDim2.new(0, 16, 0, 16)
 	ResizeHandle.Position = UDim2.new(1, -16, 1, -16)
 	ResizeHandle.BorderSizePixel = 0
 	ResizeHandle.Parent = MainWindow
 	ResizeHandle.Visible = true
-	
 	ResizeHandle.AnchorPoint = Vector2.new(0.1, 0.1)
 	ResizeHandle.BackgroundTransparency = 0
 	ResizeHandle.ClipsDescendants = true
-
+	
 	local UICorner = Instance.new("UICorner")
-	UICorner.CornerRadius = UDim.new(0.5, 0)  
+	UICorner.CornerRadius = UDim.new(0.5, 0)
 	UICorner.Parent = ResizeHandle
 	
-	local function updateColor()
-		ResizeHandle.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Main
-	end
-	
-	OrionLib.ThemeChanged.Event:Connect(updateColor)
+	ResizeHandle.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Main
 	
 	local UIS = game:GetService("UserInputService")
 	local dragging = false
