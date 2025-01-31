@@ -794,13 +794,18 @@ function OrionLib:MakeWindow(WindowConfig)
 	local UICorner = Instance.new("UICorner")
 	UICorner.CornerRadius = UDim.new(0.5, 0)  
 	UICorner.Parent = ResizeHandle
-	
+
 	local function updateColor(newTheme)
 		local theme = OrionLib.Themes[newTheme]
-		if theme then
-			ResizeHandle.BackgroundColor3 = theme.Main
+		if not theme then
+			task.spawn(function()
+				while not OrionLib.Themes[newTheme] do
+					task.wait()
+				end
+				ResizeHandle.BackgroundColor3 = OrionLib.Themes[newTheme].Main
+			end)
 		else
-			warn("Tema inválido: " .. tostring(newTheme))
+			ResizeHandle.BackgroundColor3 = theme.Main
 		end
 	end
 	
@@ -812,8 +817,6 @@ function OrionLib:MakeWindow(WindowConfig)
 			end
 		end
 	})
-	
-	task.spawn(updateColor)
 	
 	local UIS = game:GetService("UserInputService")
 	local dragging = false
