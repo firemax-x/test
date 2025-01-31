@@ -829,7 +829,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			local newWidth = MainWindow.Size.X.Offset + delta.X
 			local newHeight = MainWindow.Size.Y.Offset + delta.Y
 	
-			if newWidth >= 415 and newHeight >= 307 then
+			if newWidth >= 350 and newHeight >= 200 then
 				task.spawn(function()
 					MainWindow.Size = UDim2.new(0, newWidth, 0, newHeight)
 				end)
