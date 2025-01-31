@@ -794,17 +794,18 @@ function OrionLib:MakeWindow(WindowConfig)
 	ResizeHandle.Parent = MainWindow
 	ResizeHandle.Visible = true
 	
-	ResizeHandle.AnchorPoint = Vector2.new(0.5, 0.5)
+	ResizeHandle.AnchorPoint = Vector2.new(0.1, 0.1)
 	ResizeHandle.BackgroundTransparency = 0
 	ResizeHandle.ClipsDescendants = true
 
 	local UICorner = Instance.new("UICorner")
 	UICorner.CornerRadius = UDim.new(0.5, 0)  
 	UICorner.Parent = ResizeHandle
-	
+	local MinSize = Vector2.new(615, 344)  -- Definindo o tamanho mínimo da janela (largura, altura)
+
 	local function updateColor()
 		while true do
-			task.wait(2)
+			task.wait(0.2)
 			ResizeHandle.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Main
 		end
 	end
@@ -826,10 +827,15 @@ function OrionLib:MakeWindow(WindowConfig)
 		if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
 			local delta = input.Position - lastMousePos
 			lastMousePos = input.Position
-			
-			task.spawn(function()
-				MainWindow.Size = UDim2.new(0, MainWindow.Size.X.Offset + delta.X, 0, MainWindow.Size.Y.Offset + delta.Y)
-			end)
+
+			local newWidth = MainWindow.Size.X.Offset + delta.X
+			local newHeight = MainWindow.Size.Y.Offset + delta.Y
+
+			if newWidth >= MinSize.X and newHeight >= MinSize.Y then
+				task.spawn(function()
+					MainWindow.Size = UDim2.new(0, newWidth, 0, newHeight)
+				end)
+			end
 		end
 	end)
 	
@@ -846,7 +852,15 @@ function OrionLib:MakeWindow(WindowConfig)
 			Position = UDim2.new(0, 25, 0, 15)
 		})
 		WindowIcon.Parent = MainWindow.TopBar
-	end	
+	end
+	
+	WindowStuff:GetPropertyChangedSignal("Visible"):Connect(function()
+		if WindowStuff.Visible == false then
+			ResizeHandle.Visible = false
+		else
+			ResizeHandle.Visible = true
+		end
+	end)
 
 	MakeDraggable(DragPoint, MainWindow)
 
