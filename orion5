@@ -363,6 +363,14 @@ local function UnlockMouse(Value)
     end
 end
 
+UserInputService.InputChanged:Connect(function(input)
+    if mouselock and input.UserInputType == Enum.UserInputType.MouseMovement then
+        if UserInputService.MouseBehavior ~= Enum.MouseBehavior.Default then
+            UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+        end
+    end
+end)
+
 local function CheckKey(Table, Key)
 	for _, v in next, Table do
 		if v == Key then
