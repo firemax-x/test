@@ -801,7 +801,10 @@ function OrionLib:MakeWindow(WindowConfig)
 	ResizeHandle.AnchorPoint = Vector2.new(0.5, 0.5)
 	ResizeHandle.BackgroundTransparency = 0
 	ResizeHandle.ClipsDescendants = true
-	ResizeHandle.Shape = Enum.FrameShape.Circular
+	
+	local UICorner = Instance.new("UICorner")
+	UICorner.CornerRadius = UDim.new(0.5, 0)  
+	UICorner.Parent = ResizeHandle
 	
 	local function updateColor()
 		while true do
@@ -839,6 +842,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			dragging = false
 		end
 	end)
+	
 	if WindowConfig.ShowIcon then
 		WindowName.Position = UDim2.new(0, 50, 0, -24)
 		local WindowIcon = SetProps(MakeElement("Image", WindowConfig.Icon), {
