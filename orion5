@@ -293,7 +293,8 @@ function OrionLib:SetTheme()
         for _, Object in pairs(Type) do
             Object[ReturnProperty(Object)] = self.Themes[self.SelectedTheme][Name]
         end    
-    end    
+    end
+	updateColor()  
 end
 
 local function PackColor(Color)
@@ -779,19 +780,6 @@ function OrionLib:MakeWindow(WindowConfig)
 		DragPoint,
 		WindowStuff
 	}), "Main")
-
-	local mt = {
-		__newindex = function(t, k, v)
-			if k == "SelectedTheme" then
-				rawset(t, k, v)
-				ResizeHandle.BackgroundColor3 = OrionLib.Themes[v].Main
-			else
-				rawset(t, k, v)
-			end
-		end
-	}
-	
-	setmetatable(OrionLib, mt)
 	
 	local ResizeHandle = Instance.new("Frame")
 	ResizeHandle.Size = UDim2.new(0, 16, 0, 16)
@@ -807,7 +795,11 @@ function OrionLib:MakeWindow(WindowConfig)
 	UICorner.CornerRadius = UDim.new(0.5, 0)
 	UICorner.Parent = ResizeHandle
 	
-	ResizeHandle.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Main
+	local function updateColor()
+		ResizeHandle.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Main
+	end
+
+	updateColor()
 	
 	local UIS = game:GetService("UserInputService")
 	local dragging = false
