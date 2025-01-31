@@ -342,7 +342,7 @@ local freeMouse = Create("TextButton", {Name = "FMouse", Size = UDim2.new(), Bac
 local mouselock = false
 
 local zoomMinimoLiberado = 0.5
-local zoomMaximoLiberado = 0.55
+local zoomMaximoLiberado = 2
 local zoomNormal = 0.5
 
 local function UnlockMouse(Value)
@@ -362,14 +362,6 @@ local function UnlockMouse(Value)
 		LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
     end
 end
-
-UserInputService.InputChanged:Connect(function(input)
-    if mouselock then
-        if UserInputService.MouseBehavior ~= Enum.MouseBehavior.Default then
-            UserInputService.MouseBehavior = Enum.MouseBehavior.Default
-        end
-    end
-end)
 
 local function CheckKey(Table, Key)
 	for _, v in next, Table do
@@ -879,43 +871,6 @@ function OrionLib:MakeWindow(WindowConfig)
 		end
 	end
 	
-	zoomMinimoLiberado = 0.5
-	zoomMaximoLiberado = 0.55
-	zoomNormal = 0.5
-	
-	function toggleMouseLock(isMinimized)
-		if isMinimized then
-			UserInputService.MouseIconEnabled = false
-			UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
-			LocalPlayer.CameraMaxZoomDistance = zoomNormal
-			LocalPlayer.CameraMinZoomDistance = zoomNormal
-			LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
-		else
-			UserInputService.MouseIconEnabled = true
-			UserInputService.MouseBehavior = Enum.MouseBehavior.Default
-			LocalPlayer.CameraMaxZoomDistance = zoomMaximoLiberado
-			LocalPlayer.CameraMinZoomDistance = zoomMinimoLiberado
-			LocalPlayer.CameraMode = Enum.CameraMode.Classic
-		end
-	end
-
-	AddConnection(CloseBtn.MouseButton1Up, function()
-		MainWindow.Visible = false
-		UIHidden = true
-	
-		if WindowConfig.FreeMouse then
-			UnlockMouse(true)
-		end
-	
-		OrionLib:MakeNotification({
-			Name = "Interface Hidden",
-			Content = "Tap " .. WindowConfig.KeyToOpenWindow .. " to reopen the interface",
-			Time = 3
-		})
-	
-		showMobileOpenButton()
-		WindowConfig.CloseCallback()
-	end)
 	
 	AddConnection(CloseBtn.MouseButton1Up, function()
 		MainWindow.Visible = false
