@@ -792,12 +792,25 @@ function OrionLib:MakeWindow(WindowConfig)
 	}), "Main")
 
 	local ResizeHandle = Instance.new("Frame")
-	ResizeHandle.Size = UDim2.new(0, 20, 0, 20)
-	ResizeHandle.Position = UDim2.new(1, -20, 1, -20)
-	ResizeHandle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+	ResizeHandle.Size = UDim2.new(0, 16, 0, 16)
+	ResizeHandle.Position = UDim2.new(1, -16, 1, -16)
 	ResizeHandle.BorderSizePixel = 0
 	ResizeHandle.Parent = MainWindow
-	ResizeHandle.Visible = false  
+	ResizeHandle.Visible = true
+	
+	ResizeHandle.AnchorPoint = Vector2.new(0.5, 0.5)
+	ResizeHandle.BackgroundTransparency = 0
+	ResizeHandle.ClipsDescendants = true
+	ResizeHandle.Shape = Enum.FrameShape.Circular
+	
+	local function updateColor()
+		while true do
+			task.wait(2)
+			ResizeHandle.BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Main
+		end
+	end
+	
+	task.spawn(updateColor)
 	
 	local UIS = game:GetService("UserInputService")
 	local dragging = false
@@ -815,7 +828,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			local delta = input.Position - lastMousePos
 			lastMousePos = input.Position
 			
-			task.spawn(function() 
+			task.spawn(function()
 				MainWindow.Size = UDim2.new(0, MainWindow.Size.X.Offset + delta.X, 0, MainWindow.Size.Y.Offset + delta.Y)
 			end)
 		end
@@ -826,7 +839,6 @@ function OrionLib:MakeWindow(WindowConfig)
 			dragging = false
 		end
 	end)
-	
 	if WindowConfig.ShowIcon then
 		WindowName.Position = UDim2.new(0, 50, 0, -24)
 		local WindowIcon = SetProps(MakeElement("Image", WindowConfig.Icon), {
