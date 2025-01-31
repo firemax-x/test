@@ -797,7 +797,7 @@ function OrionLib:MakeWindow(WindowConfig)
 	ResizeHandle.AnchorPoint = Vector2.new(0.5, 0.5)
 	ResizeHandle.BackgroundTransparency = 0
 	ResizeHandle.ClipsDescendants = true
-	
+
 	local UICorner = Instance.new("UICorner")
 	UICorner.CornerRadius = UDim.new(0.5, 0)  
 	UICorner.Parent = ResizeHandle
