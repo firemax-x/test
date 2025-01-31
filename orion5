@@ -771,13 +771,14 @@ function OrionLib:MakeWindow(WindowConfig)
 		DragPoint,
 		WindowStuff
 	}), "Main")
-	
+
 	local ResizeHandle = Instance.new("Frame")
 	ResizeHandle.Size = UDim2.new(0, 20, 0, 20)
 	ResizeHandle.Position = UDim2.new(1, -20, 1, -20)
 	ResizeHandle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
 	ResizeHandle.BorderSizePixel = 0
 	ResizeHandle.Parent = MainWindow
+	ResizeHandle.Visible = false  
 	
 	local Triangle = Instance.new("ImageLabel")
 	Triangle.Size = UDim2.new(1, 0, 1, 0)
@@ -811,7 +812,6 @@ function OrionLib:MakeWindow(WindowConfig)
 			dragging = false
 		end
 	end)
-
 	if WindowConfig.ShowIcon then
 		WindowName.Position = UDim2.new(0, 50, 0, -24)
 		local WindowIcon = SetProps(MakeElement("Image", WindowConfig.Icon), {
@@ -938,14 +938,14 @@ function OrionLib:MakeWindow(WindowConfig)
 			MainWindow.ClipsDescendants = true
 			WindowTopBarLine.Visible = false
 			MinimizeBtn.Ico.Image = "rbxassetid://7072720870"
-
+	
 			TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, WindowName.TextBounds.X + 140, 0, 50)}):Play()
 			wait(0.1)
-			WindowStuff.Visible = false	
+			WindowStuff.Visible = false
 		end
 		Minimized = not Minimized    
 	end)
-
+	
 	local function LoadSequence()
 		MainWindow.Visible = false
 		local LoadSequenceLogo = SetProps(MakeElement("Image", WindowConfig.IntroIcon), {
@@ -956,7 +956,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			ImageColor3 = Color3.fromRGB(255, 255, 255),
 			ImageTransparency = 1
 		})
-
+	
 		local LoadSequenceText = SetProps(MakeElement("Label", WindowConfig.IntroText, 14), {
 			Parent = Orion,
 			Size = UDim2.new(1, 0, 1, 0),
@@ -966,7 +966,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			Font = Enum.Font.GothamBold,
 			TextTransparency = 1
 		})
-
+	
 		TweenService:Create(LoadSequenceLogo, TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0, Position = UDim2.new(0.5, 0, 0.5, 0)}):Play()
 		wait(0.8)
 		TweenService:Create(LoadSequenceLogo, TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -(LoadSequenceText.TextBounds.X/2), 0.5, 0)}):Play()
@@ -977,8 +977,16 @@ function OrionLib:MakeWindow(WindowConfig)
 		MainWindow.Visible = true
 		LoadSequenceLogo:Destroy()
 		LoadSequenceText:Destroy()
-	end 
-
+	end
+	
+	MainWindow:GetPropertyChangedSignal("Visible"):Connect(function()
+		if MainWindow.Visible then
+			ResizeHandle.Visible = true  
+		else
+			ResizeHandle.Visible = false  
+		end
+	end)
+	
 	if WindowConfig.IntroEnabled then
 		LoadSequence()
 	end	
